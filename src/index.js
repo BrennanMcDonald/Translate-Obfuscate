@@ -7,12 +7,9 @@ import ReactGA from 'react-ga';
 import {
     Dropdown,
     Button,
-    Input,
     Container,
-    Grid,
     TextArea,
     Form,
-    GridColumn,
 } from 'semantic-ui-react';
 
 dotenv.config();
@@ -83,7 +80,6 @@ class Obfs extends React.Component {
     }
 
     translate(text) {
-        var that = this;
         if (text) {
             this.setState({
                 translatedText: this.state.inputText
