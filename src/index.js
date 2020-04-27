@@ -83,22 +83,17 @@ class Obfs extends React.Component {
         if (text) {
             this.setState({
                 translatedText: this.state.inputText
-            })
+            });
             this.nextTranslation(text, this.state.languages, 0);
-
         }
-        else
-            alert("No text entered")
     }
 
     nextTranslation(text, languageList, i) {
         var that = this;
-        console.log(i, languageList.length)
         if (i > languageList.length) {
             return "done"
         }
         Translator.translate(text, languageList[i], function (err, translation) {
-            console.log(i)
             if (err) {
                 console.error(err.body);
             } else {
@@ -186,7 +181,7 @@ class LangaugeChain extends React.Component {
         return (
             <table>
                 <thead>
-                    <tr class="ribbon-container">
+                    <tr className="ribbon-container">
                         {
                             this.props.languages.map((x, i) => {
                                 if (i === this.props.step) {

@@ -14,7 +14,7 @@ table {
     .ribbon {
         margin: 0;
         padding: 9px;
-        margin-right: 16px;
+        margin-right: 15px;
         margin-top: 5%;
         position:relative;
         color: #ffffff;
@@ -31,7 +31,6 @@ table {
         background: red;
     }
       
-    .ribbon:before, 
     .ribbon:after {
         content: "";
         width:.2em;
@@ -42,24 +41,26 @@ table {
         border: 15px solid blue;
         z-index:-2;
     }
-    .ribbon.current:before,
     .ribbon.current:after {
-        background: red;
+      right: -15px;
+      border-left-width: 15px;
+      border-right-color: transparent;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 15px 0 15px 15px;
+      border-color: transparent transparent transparent red;
     }
       
      
-  .ribbon:before {
-          left:-15px;
-          border-right-width: 0;
-          border-left-color:transparent;
-      } 
+
       table > thead > tr > th:First-of-type:before {
         left:0px;
         border-right-width: 0;
         border-left-color:transparent;
         display:none;
     }
-    table > thead > tr > th:First-of-type {
+    table > thead > tr > th{
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
     }
@@ -67,18 +68,20 @@ table {
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
     }
+    
+    table > thead > tr > th:last-of-type:after {
+      display:none;
+    }
       
   .ribbon:after {
-          right:-15px;
-          border-left-width: 15px;
-          border-right-color:transparent;
+      right:-15px;
+      border-left-width: 15px;
+      border-right-color:transparent;
       width: 0;
       height: 0;
       border-style: solid;
       border-width: 15px 0 15px 15px;
-    
-  /*     border-color: transparent transparent transparent teal; */
-    border-color: transparent transparent transparent blue
+      border-color: transparent transparent transparent blue
   
       }
       table > thead > tr > th:last-of-type:after {
