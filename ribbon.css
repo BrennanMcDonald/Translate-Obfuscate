@@ -1,0 +1,108 @@
+
+table {
+    text-align: center;
+    margin: 0 auto;
+    widows: 100%;
+    min-width: 800px;
+  }
+      
+  
+  .ribbon-container {
+    width: 100%;
+  }
+  
+    .ribbon {
+        margin: 0;
+        padding: 9px;
+        margin-right: 16px;
+        margin-top: 5%;
+        position:relative;
+        color: #ffffff;
+        font: 11px 'Patua One', sans-serif;
+        text-align: center;
+        letter-spacing:0.1em;
+        vertical-align: center;
+        background: blue;
+        display: inline-block;
+        height: 30px;
+    }
+
+    .ribbon.current {
+        background: red;
+    }
+      
+    .ribbon:before, 
+    .ribbon:after {
+        content: "";
+        width:.2em;
+        bottom:-.5em;
+        bottom: 0;
+        position:absolute;
+        display:block;
+        border: 15px solid blue;
+        z-index:-2;
+    }
+    .ribbon.current:before,
+    .ribbon.current:after {
+        background: red;
+    }
+      
+     
+  .ribbon:before {
+          left:-15px;
+          border-right-width: 0;
+          border-left-color:transparent;
+      } 
+      table > thead > tr > th:First-of-type:before {
+        left:0px;
+        border-right-width: 0;
+        border-left-color:transparent;
+        display:none;
+    }
+    table > thead > tr > th:First-of-type {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    table > thead > tr > th:last-of-type {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+      
+  .ribbon:after {
+          right:-15px;
+          border-left-width: 15px;
+          border-right-color:transparent;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 15px 0 15px 15px;
+    
+  /*     border-color: transparent transparent transparent teal; */
+    border-color: transparent transparent transparent blue
+  
+      }
+      table > thead > tr > th:last-of-type:after {
+        left:0px;
+        border-right-width: 0;
+        border-left-color:transparent;
+    }
+      
+  #content:before, #content:after {
+          content:"";
+          bottom:-.5em;
+          position:absolute;
+          display:block;
+          border-style:solid;
+          border-color: blue transparent transparent transparent;
+          z-index:-1;
+      }
+      
+  #content:before {
+        left: 0;
+        border-width: .5em 0 0 .5em;
+      }
+      
+  #content:after {
+        right: 0;
+        border-width: .5em .5em 0 0;
+      }
