@@ -8,30 +8,32 @@ table {
       
   
   .ribbon-container {
-    width: 100%;
+    padding: 5px 0px;
+    display:flex;
+    place-items: center;
   }
   
     .ribbon {
         margin: 0;
-        padding: 9px;
-        margin-right: 16px;
-        margin-top: 5%;
+        padding:  5px 9px;
+        margin-right: 15px;
         position:relative;
-        color: #ffffff;
-        font: 11px 'Patua One', sans-serif;
+        color: #000;
+        font-family: 'Roboto', sans-serif;
+        font-size: 0.8em;
+        font-weight: 500;
         text-align: center;
         letter-spacing:0.1em;
         vertical-align: center;
-        background: blue;
+        background: #96E6B3;
         display: inline-block;
         height: 30px;
     }
 
     .ribbon.current {
-        background: red;
+        background: #DA3E52;
     }
       
-    .ribbon:before, 
     .ribbon:after {
         content: "";
         width:.2em;
@@ -39,27 +41,29 @@ table {
         bottom: 0;
         position:absolute;
         display:block;
-        border: 15px solid blue;
+        border: 15px solid #96E6B3;
         z-index:-2;
     }
-    .ribbon.current:before,
     .ribbon.current:after {
-        background: red;
+      right: -15px;
+      border-left-width: 15px;
+      border-right-color: transparent;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 15px 0 15px 15px;
+      border-color: transparent transparent transparent #DA3E52;
     }
       
      
-  .ribbon:before {
-          left:-15px;
-          border-right-width: 0;
-          border-left-color:transparent;
-      } 
+
       table > thead > tr > th:First-of-type:before {
         left:0px;
         border-right-width: 0;
         border-left-color:transparent;
         display:none;
     }
-    table > thead > tr > th:First-of-type {
+    table > thead > tr > th{
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
     }
@@ -67,18 +71,21 @@ table {
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;
     }
+    
+    table > thead > tr > th:last-of-type:after {
+      display:none;
+    }
       
   .ribbon:after {
-          right:-15px;
-          border-left-width: 15px;
-          border-right-color:transparent;
+      right:-15px;
+      border-left-width: 15px;
+      border-right-color:transparent;
       width: 0;
       height: 0;
       border-style: solid;
       border-width: 15px 0 15px 15px;
-    
-  /*     border-color: transparent transparent transparent teal; */
-    border-color: transparent transparent transparent blue
+      border-color: transparent transparent transparent #96E6B3;
+      z-index: 1;
   
       }
       table > thead > tr > th:last-of-type:after {
@@ -93,8 +100,9 @@ table {
           position:absolute;
           display:block;
           border-style:solid;
-          border-color: blue transparent transparent transparent;
-          z-index:-1;
+          border-color: #96E6B3 transparent transparent transparent;
+          z-index: 10;
+
       }
       
   #content:before {
