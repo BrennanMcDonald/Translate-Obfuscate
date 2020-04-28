@@ -10,6 +10,7 @@ import {
     Container,
     TextArea,
     Form,
+    Message,
 } from 'semantic-ui-react';
 
 dotenv.config();
@@ -17,7 +18,13 @@ dotenv.config();
 ReactGA.initialize('UA-79437382-4');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
-const Translator = GoogleTranslate("AIzaSyDdHaxMLvjblyat6PN3wk5u6TV0Dplj41Y", {})
+let Translator;
+
+if (process.env.NODE_ENV === 'development') {
+    Translator = GoogleTranslate(process.env.REACT_APP_GOOGLE_API_KEY_DEVL, {})
+} else {
+    Translator = GoogleTranslate(process.env.REACT_APP_GOOGLE_API_KEY_PROD, {})
+}
 
 function translateForDropdown(item) {
     return {
@@ -37,14 +44,21 @@ class Obfs extends React.Component {
             translation: "",
             translatedText: "",
             languages: ["en"],
-            SupportedLanguages: [],
+            SupportedLanguages: [{ key: "af", text: "Afrikaans", value: "Afrikaans" }],
             translationChain: []
         };
 
-        Translator.getSupportedLanguages("en", function (_, b) {
-            that.setState({
-                SupportedLanguages: b.map(x => translateForDropdown(x))
-            });
+        Translator.getSupportedLanguages("en", function (e, b) {
+            if (!e) {
+                that.setState({
+                    SupportedLanguages: b.map(x => translateForDropdown(x))
+                });
+            } else {
+                that.setState({
+                    error: true,
+                    error_body: JSON.parse(e.body).error
+                })
+            }
         });
 
         this.onChange = this.onChange.bind(this);
@@ -88,6 +102,38 @@ class Obfs extends React.Component {
         }
     }
 
+    addLanguage() {
+        var languageList = this.state.languages
+        if (this.state.newLanguage) {
+            if (languageList[languageList.length - 1] !== this.state.newLanguage)
+                languageList.push(this.state.newLanguage)
+            this.setState({
+                languages: languageList
+            });
+            console.log(languageList);
+
+        }
+    }
+
+    randomTen() {
+        let languageList = []
+        this.setState({
+            languages: languageList
+        })
+        let langLength = this.state.SupportedLanguages.length;
+        for(var i = 0; i < 9; i++) {
+            let randLangIndex = Math.floor(Math.random(0) * langLength)
+            let randLanguage = this.state.SupportedLanguages[randLangIndex]
+            languageList.push(randLanguage.key)
+        }
+        languageList.push("en");
+        this.setState({
+            languages: languageList
+        })
+        console.log(this.state.languages.length)
+
+    }
+
     nextTranslation(text, languageList, i) {
         var that = this;
         if (i > languageList.length) {
@@ -104,21 +150,33 @@ class Obfs extends React.Component {
                     translationChain: chain,
                     step: i
                 });
-                console.log(that.state)
-
                 return that.nextTranslation(translation.translatedText, languageList, i + 1)
             }
         });
     }
 
     render() {
-        return (<Container>
+        return (<div>
+            <Container className="primary">
             <br />
+            <h1>Translate<span>Obfuscate</span></h1>
             <br />
-            {this.state.translation} <br />
+            {
+                this.state.error &&
+                <Message error>
+                    <Message.Header>Error</Message.Header>
+                    <p>There has been an error loading the backend service. {this.state.error_body.message}</p>
+                </Message>
+            }
             <Form>
                 <Container className="translationContent">
-                    <LanguageChainer languages={this.state.SupportedLanguages} onChange={this.onChange} step={this.state.step} />
+                    <div className="utility-bar">
+                        <div className="language-select-container">
+                            <LanguageDropdown name="newLanguage" value={this.state.newLanguage} onChange={this.onChange} languages={this.state.SupportedLanguages} />
+                            <Button color={"#DA3E52"} onClick={this.addLanguage.bind(this)} className="add-language-button">Add</Button>
+                        </div>
+                        <LangaugeChain languages={this.state.languages} step={this.state.step}></LangaugeChain>
+                    </div>
                     <div className="headerRow">
                         <div className="leftHeader">
                             Input
@@ -127,7 +185,7 @@ class Obfs extends React.Component {
                             Output
                         </div>
                         <div className="leftContent">
-                            <TextArea name="inputText" value={this.state.inputText} onChange={this.onChange} />
+                            <TextArea name="inputText" placeholder="Input Text" value={this.state.inputText} onChange={this.onChange} />
                         </div>
                         <div className="rightContent">
                             <TextArea name="outputText" value={this.state.translatedText} />
@@ -137,16 +195,20 @@ class Obfs extends React.Component {
                 <br />
                 <br />
                 <Button primary floated="right" onClick={this.onSubmit}>Translate</Button>
+                <Button primary floated="left" onClick={this.randomTen.bind(this)}>Random 10</Button>
                 <br />
             </Form>
-        </Container>)
+        </Container>
+        <Container className="footer">
+        <p>Made by <a href="https://brennanmcdonald.ca">Brennan McDonald</a> - 2020</p>
+        </Container>
+        </div>)
     }
 }
 
 class LanguageDropdown extends React.Component {
     constructor(props) {
         super(props);
-
         this.onChange = this.onChange.bind(this);
     }
 
@@ -165,6 +227,7 @@ class LanguageDropdown extends React.Component {
     render() {
         return (
             <Dropdown
+                className="language-dropdown"
                 placeholder='Select Language'
                 fluid
                 search
@@ -179,72 +242,17 @@ class LanguageDropdown extends React.Component {
 class LangaugeChain extends React.Component {
     render() {
         return (
-            <table>
-                <thead>
-                    <tr className="ribbon-container">
-                        {
-                            this.props.languages.map((x, i) => {
-                                if (i === this.props.step) {
-                                    return <th key={x} className="ribbon current">{x}</th>
-                                } else {
-                                    return <th key={x} className="ribbon">{x}</th>
-                                }
-                            })
+            <div className="ribbon-container">
+                {
+                    this.props.languages.map((x, i) => {
+                        if (i === this.props.step) {
+                            return <div key={Math.random()} className="ribbon current">{x}</div>
+                        } else {
+                            return <div key={Math.random()} className="ribbon">{x}</div>
                         }
-                    </tr>
-                </thead>
-            </table>
-        )
-    }
-
-}
-
-class LanguageChainer extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            languages: ["en"],
-            newLanguage: ""
-        }
-
-        this.onChange = this.onChange.bind(this);
-        this.addLanguage = this.addLanguage.bind(this);
-    }
-
-    onChange(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    addLanguage() {
-        var languageList = this.state.languages
-        if (this.state.newLanguage !== "") {
-            if (languageList[languageList.length - 1] !== this.state.newLanguage)
-                languageList.push(this.state.newLanguage)
-            this.setState({
-                languages: languageList
-            });
-            var onChangeResult = {
-                target: {
-                    name: 'languages',
-                    value: this.state.languages
+                    })
                 }
-            }
-            this.props.onChange(onChangeResult)
-        }
-    }
 
-    render() {
-        return (
-            <div>
-                <LangaugeChain languages={this.state.languages} step={this.props.step}></LangaugeChain>
-                <br />
-                <LanguageDropdown name="newLanguage" value={this.state.newLanguage} onChange={this.onChange} languages={this.props.languages} />
-                <Button onClick={this.addLanguage} floated="right">+</Button>
-                <br />
-                <br />
             </div>
         )
     }
