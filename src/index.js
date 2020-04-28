@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import dotenv from 'dotenv';
 import GoogleTranslate from 'google-translate';
-import ReactGA from 'react-ga';
 
 import {
     Dropdown,
@@ -14,9 +13,6 @@ import {
 } from 'semantic-ui-react';
 
 dotenv.config();
-
-ReactGA.initialize('UA-79437382-4');
-ReactGA.pageview(window.location.pathname + window.location.search);
 
 let Translator;
 
