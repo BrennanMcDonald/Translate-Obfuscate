@@ -110,8 +110,6 @@ class Obfs extends React.Component {
             this.setState({
                 languages: languageList
             });
-            console.log(languageList);
-
         }
     }
 
@@ -130,8 +128,6 @@ class Obfs extends React.Component {
         this.setState({
             languages: languageList
         })
-        console.log(this.state.languages.length)
-
     }
 
     nextTranslation(text, languageList, i) {
@@ -159,7 +155,7 @@ class Obfs extends React.Component {
         return (<div>
             <Container className="primary">
             <br />
-            <h1>Translate<span>Obfuscate</span></h1>
+            <h1>Translate <span>Obfuscate</span></h1>
             <br />
             {
                 this.state.error &&
