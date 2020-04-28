@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: true
-      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      REACT_APP_GOOGLE_API_KEY_PROD: ${{ secrets.REACT_APP_GOOGLE_API_KEY_PROD }}
       SOURCE_DIR: 'build'      # optional: defaults to entire repository
     steps:
     - uses: actions/checkout@v1
@@ -24,6 +24,6 @@ jobs:
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        ACCESS_TOKEN: ${{ secrets.GH_TOKEN }}
         BRANCH: gh-pages
         FOLDER: build
